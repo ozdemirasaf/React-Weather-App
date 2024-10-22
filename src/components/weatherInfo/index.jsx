@@ -1,12 +1,15 @@
+
 import { useWeather } from "../../reducers/hooks"
 
 export default function WeatherInfo() {
 
     const weathers = useWeather();
 
+
     if (!weathers || !weathers.data || !weathers.data.weather || !weathers.data.weather[0]) {
         return null;
     }
+
 
     let weatherInfo = '';
 

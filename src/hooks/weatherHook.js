@@ -1,5 +1,5 @@
 import { TOKEN } from "./token"
-import { useCity, useWeatherSituation } from "../reducers/hooks"
+import { useCity, useWeatherSituation, useWeatherLocation } from "../reducers/hooks"
 import { setWeather } from "../reducers/actions"
 import { useEffect } from "react"
 
@@ -7,28 +7,38 @@ export default function WeatherFetch() {
     const cityName = useCity()
     const weatherSituation = useWeatherSituation()
 
-
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName.title}&appid=${TOKEN}`
-
+    const weatherLocation = useWeatherLocation()
 
 
-    const weatherFetch = async () => {
+    const urls = {
+        search: `https://api.openweathermap.org/data/2.5/weather?q=${cityName.title}&appid=${TOKEN}`,
+        location: weatherLocation.data && weatherLocation.data.lat && weatherLocation.data.lon
+            ? `https://api.openweathermap.org/data/2.5/weather?lat=${weatherLocation.data.lat}&lon=${weatherLocation.data.lon}&appid=${TOKEN}`
+            : null,
+    }
+
+    const weatherFetch = async (url) => {
         try {
             const response = await fetch(url);
             const data = await response.json();
-            setWeather('data', data);
+            setWeather("weather", data);
         }
         catch (err) {
             console.log(err);
         }
     }
 
-
     useEffect(() => {
         if (cityName.title && weatherSituation.situation) {
-            weatherFetch()
+            weatherFetch(urls.search)
         }
     }, [cityName, weatherSituation]);
+
+    useEffect(() => {
+        if (urls.location) {
+            weatherFetch(urls.location)
+        }
+    }, [urls.location])
 
     return null
 }

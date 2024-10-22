@@ -1,1 +1,1 @@
-export const TOKEN = 'Api_Key'
+export const TOKEN = 'Api_key'

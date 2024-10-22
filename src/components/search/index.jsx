@@ -4,7 +4,6 @@ import { setCity, setSearchSituation, } from "../../reducers/actions"
 export default function Search() {
 
     const cityValueTitle = (e) => {
-        console.log(e);
         if (e.target.value) {
             setCity('weather', e.target.value)
         }
